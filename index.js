@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 require('dotenv').config();
 
@@ -16,17 +16,28 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try{
         const productsCollection = client.db("ClassicePhoneDB").collection('Products2');
-        app.get('/products',async(req,res)=>{
-        let query = {};
-        if(req.query.category){
-            query={
-                category:req.query.category
-            }
-        }
-        const cursor = productsCollection.find(query);
-        const products = await cursor.toArray();
-        res.send(products)
+        app.get('/category',async(req,res)=>{
+          const query = {};
+          const results = await productsCollection.find(query).toArray();
+          res.send(results)
         })
+        app.get('/category/:id', async(req,res)=>{
+          const id=req.params.id;
+          const query={_id:ObjectId(id)};
+          const singleProducts = await productsCollection.findOne(query);
+          res.send(singleProducts)
+        })
+        // app.get('/products',async(req,res)=>{
+        // let query = {};
+        // if(req.query.category){
+        //     query={
+        //         category:req.query.category
+        //     }
+        // }
+        // const cursor = productsCollection.find(query);
+        // const products = await cursor.toArray();
+        // res.send(products)
+        // })
     }
     finally{
 
