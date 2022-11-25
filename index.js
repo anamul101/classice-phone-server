@@ -17,6 +17,7 @@ async function run(){
     try{
         const productsCollection = client.db("ClassicePhoneDB").collection('Products2');
         const bookingsCollection = client.db("ClassicePhoneDB").collection('bookings2');
+        const usersCollection = client.db("ClassicePhoneDB").collection('users2');
         app.get('/category',async(req,res)=>{
           const query = {};
           const results = await productsCollection.find(query).toArray();
@@ -56,6 +57,14 @@ async function run(){
         // const products = await cursor.toArray();
         // res.send(products)
         // })
+
+        // end point of users
+        app.post('/users', async(req,res)=>{
+          const user = req.body;
+          console.log(user);
+          const results = await usersCollection.insertOne(user);
+          res.send(results);
+        });
     }
     finally{
 
