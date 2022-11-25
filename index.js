@@ -16,6 +16,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try{
         const productsCollection = client.db("ClassicePhoneDB").collection('Products2');
+        const bookingsCollection = client.db("ClassicePhoneDB").collection('bookings2');
         app.get('/category',async(req,res)=>{
           const query = {};
           const results = await productsCollection.find(query).toArray();
@@ -27,14 +28,31 @@ async function run(){
           const singleProducts = await productsCollection.findOne(query);
           res.send(singleProducts)
         })
-        // app.get('/products',async(req,res)=>{
+        // End Poient of bookings
+        app.post('/bookings',async(req,res)=>{
+          const booking = req.body;
+          const results = await bookingsCollection.insertOne(booking);
+          res.send(results);
+        })
+        app.get('/bookings', async(req,res)=>{
+          const email = req.query.email;
+          // console.log('accestoken', req.headers.authorization)
+          // const decodedEmail=req.decoded.email;
+          // if(email !== decodedEmail){
+          //   return res.status(403).send({message: 'forbidden access'});
+          // }
+          const query = {email: email};
+          const bookings = await bookingsCollection.find(query).toArray();
+          res.send(bookings);
+        });
+        // app.get('/bookings',async(req,res)=>{
         // let query = {};
-        // if(req.query.category){
+        // if(req.query.email){
         //     query={
-        //         category:req.query.category
+        //         email:req.query.email
         //     }
         // }
-        // const cursor = productsCollection.find(query);
+        // const cursor = bookingsCollection.find(query);
         // const products = await cursor.toArray();
         // res.send(products)
         // })
