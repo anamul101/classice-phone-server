@@ -23,6 +23,12 @@ async function run(){
           const results = await productsCollection.find(query).toArray();
           res.send(results)
         })
+        app.post('/category',async(req,res)=>{
+          const addProduct=req.body;
+          console.log(addProduct);
+          const results =await productsCollection.insertOne({products:addProduct});
+          res.send(results);
+        })
         app.get('/category/:id', async(req,res)=>{
           const id=req.params.id;
           const query={_id:ObjectId(id)};
@@ -46,6 +52,12 @@ async function run(){
           const bookings = await bookingsCollection.find(query).toArray();
           res.send(bookings);
         });
+        app.delete('/bookings/:id', async(req,res)=>{
+          const id = req.params.id;
+          const query={_id:ObjectId(id)};
+          const deletproducts =await bookingsCollection.deleteOne(query);
+          res.send(deletproducts);
+        })
         // app.get('/bookings',async(req,res)=>{
         // let query = {};
         // if(req.query.email){
@@ -65,6 +77,25 @@ async function run(){
           const results = await usersCollection.insertOne(user);
           res.send(results);
         });
+        
+        app.get('/users/seller/:email', async (req, res) => {
+          const email = req.params.email;
+          const query = { email }
+          const user = await usersCollection.findOne(query);
+          res.send({ isSeller: user?.role === 'seller' });
+      })
+        app.get('/users/buyer/:email', async (req, res) => {
+          const email = req.params.email;
+          const query = { email }
+          const user = await usersCollection.findOne(query);
+          res.send({ isBuyer: user?.role === 'buyer' });
+      })
+      app.get('/users/admin/:email', async (req, res) => {
+        const email = req.params.email;
+        const query = { email }
+        const user = await usersCollection.findOne(query);
+        res.send({ isAdmin: user?.role === 'admin' });
+      })
     }
     finally{
 
