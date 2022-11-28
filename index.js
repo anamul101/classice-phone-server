@@ -167,7 +167,7 @@ async function run(){
           const result = await usersCollection.updateOne(query, updatedDoc);
           res.status(403).send(result);
       })
-        app.put('/users/admin/:id',verifyAdmin, async (req, res) => {
+        app.put('/users/admin/:id',async (req, res) => {
           const id = req.params.id;
           const filter = { _id: ObjectId(id) }
           const options = { upsert: true };
