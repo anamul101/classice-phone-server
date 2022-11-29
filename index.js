@@ -125,6 +125,17 @@ async function run(){
           const bookings = await bookingsCollection.find(query).toArray();
           res.send(bookings);
         });
+        app.put('/bookings/:id', async (req, res) => {
+          const id = req.params.id;
+          const query = { _id: ObjectId(id) };
+          const updatedDoc = {
+              $set: {
+                paid: 'paid'
+              }
+          }
+          const result = await bookingsCollection.updateOne(query, updatedDoc);
+          res.status(403).send(result);
+      })
         app.delete('/bookings/:id', async(req,res)=>{
           const id = req.params.id;
           const query={_id:ObjectId(id)};
@@ -135,7 +146,6 @@ async function run(){
         // end point of users
         app.post('/users', async(req,res)=>{
           const user = req.body;
-          console.log(user);
           const results = await usersCollection.insertOne(user);
           res.send(results);
         });
@@ -179,7 +189,7 @@ async function run(){
           const result = await usersCollection.updateOne(filter, updatedDoc, options);
           res.send(result);
       });
-  
+
         app.get('/users/seller/:email', async (req, res) => {
           const email = req.params.email;
           const query = { email }
@@ -197,7 +207,14 @@ async function run(){
         const query = { email }
         const user = await usersCollection.findOne(query);
         res.send({ isAdmin: user?.role === 'admin' });
+      });
+      app.get('/user/:id', async(req,res)=>{
+        const id=req.params.id;
+        const query={email:id};
+        const result=await usersCollection.findOne(query);
+        res.send(result);
       })
+  
     }
     finally{
 
