@@ -49,7 +49,7 @@ async function run(){
           const singleProducts = await productsCollection.findOne(query);
           res.send(singleProducts)
         })
-        // addProducts
+        // End Poient of addProducts
         app.post('/addproducts',async(req,res)=>{
           const addProduct=req.body;
           console.log(addProduct)
